@@ -1,38 +1,59 @@
-import { useState, useEffect } from 'react'
-import './App.css'
+import React, { useState } from 'react';
+import './App.css';
+import { validateNumber } from "./utils"
 
 function App() {
-  const [value, setValue] = useState(0)
-  const [convert, setConvert] = useState("C to K");
-  const result = "";
-  const convertTemperature = () => {
-    if(option.value == "C to K"){
-      setValue(value + 273);
-    } else if(option.value == "K to C"){
-      setValue(value - 273);
-    } else if(option.value == "C to F") {
-      setValue(value * 9 / 5 + 32);
-    } else if(option.value == "F to C") {
-      
-    }
+  const [inputValue, setInputValue] = useState(""); 
+  const [result, setResult] = useState("");
+  const [convert, setConvert] = useState("CtoK");
+ 
+ const isInvalidInput = () => {
+    return(
+      <p className='error'>Please enter a valid Input</p>
+    )
+ }
+  const validateInput = () => {
+    return(
+      inputValue &&
+      validateNumber(inputValue)
+    )
   }
+  const convertTemperature = () => {
+    const inputValueFloat = parseFloat(inputValue); 
+    
+
+    if (convert === "CtoK") {
+      setResult(`${inputValueFloat + 273} K`);
+    } else if (convert === "KtoC") {
+      setResult(`${inputValueFloat - 273} °C`);
+    } else if (convert === "CtoF") {
+      setResult(`${(inputValueFloat * 9/5) + 32} °F`);
+    } else if (convert === "FtoC") {
+      setResult(`${(inputValueFloat - 32) * 5/9} °C`);
+    }
+  };
 
   return (
-    
-    <div className='main-container'>
+    <div>
+      <div className='main-container'>
       <h1>Temperature Converter App</h1>
-      <select value={convert} onChange={e => setConvert(e.target.value)}>
-      <option value="C to K">Celsuis to Kelvin</option>
-      <option value="K to C">Kelvin to Celsuis</option>
-      <option value="C to F">Celsuis to Fahrenheit</option>
-      <option value="C to F">Fahrenheit to Celsuis</option>
+      <div className='second-container'>
+      <select value={convert} className="selector"onChange={e => setConvert(e.target.value)}>
+        <option value="CtoK">Celsius to Kelvin</option>
+        <option value="KtoC">Kelvin to Celsius</option>
+        <option value="CtoF">Celsius to Fahrenheit</option>
+        <option value="FtoC">Fahrenheit to Celsius</option>
       </select>
-      <label htmlFor='converter'>Converter</label>
-      <input type='text' id='conventer' value={value}></input>
-      <p>result:{value}</p>
-      <button onClick={convertTemperature()}>Convert</button>
+      <input type='text' id='converter' value={inputValue} onChange={e => setInputValue(e.target.value)}></input>
+      </div>
+      <div className='third-container'>
+      <button disabled={validateInput}onClick={convertTemperature}>Convert</button>
+      <p>Result: {result}</p>
+      </div>
+      </div>
     </div>
-  )
+  );
 }
 
-export default App
+export default App;
+
